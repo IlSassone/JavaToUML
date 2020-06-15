@@ -1,10 +1,12 @@
-className = None
-classAttributes = []
-classConstructors = []
-classMethods = []
-f = open("Impiegato.java", "r")
-f1 = f.readlines()
-f.close()
+from PIL import Image, ImageDraw, ImageFont
+import textwrap
+import sys
+
+
+fnt = ImageFont.truetype("./fonts/SFPro.ttf", 18)
+title = ImageFont.truetype("./fonts/Heavy.ttf", 20)
+qrcode = Image.open("./github.png", "r")
+
 
 
 #the className must me in upper case in camelNotation, so the first word with capital is the className
@@ -78,7 +80,8 @@ def strClean(str, mode):
         cont = 2
         while not "throws" in temp[cont]:
             #cont > tipo dato
-            #cont+1 nome attributo
+            #cont+1 > nome attributo
+            temp[cont+1]=temp[cont+1].replace(",","")
             nStr+=temp[cont+1]+": "
             nStr+=temp[cont]+", "
             cont+=2
@@ -88,7 +91,7 @@ def strClean(str, mode):
         temp = str.replace("(", " ")
         temp = temp.replace(")", " ")
         temp = temp.split()
-        print(temp)
+        
         if temp[0]=="private":
             nStr+="- "
         elif temp[0]=="public":
@@ -104,14 +107,23 @@ def strClean(str, mode):
             cont+=2
         nStr+="): "+temp[1]
 
-
-
-
+    """if len(nStr) >= 50:
+        nStr = nStr[:50] +"\n"+nStr[50:]
+        """
+    my_wrap = textwrap.TextWrapper(width = 60)
+    wrap_list = my_wrap.wrap(text=nStr)
+    nStr = "\n".join(wrap_list)
     return nStr
 
 
 mode = None
-
+className = None
+classAttributes = []
+classConstructors = []
+classMethods = []
+f = open(sys.argv[1], "r")
+f1 = f.readlines()
+f.close()
 for l in f1:
     #finds the name of the class and saves it
     if "class" in l:
@@ -168,3 +180,41 @@ print(className)
 print(classAttributes)
 print(classConstructors)
 print(classMethods)
+
+
+im = Image.new("RGB", (500, 750), color="white")
+
+d = ImageDraw.Draw(im)
+
+#writes title
+d.text((20, 15), className, font=title, fill="black")
+d.line((0,50, 500, 50), fill="grey")
+#writes attributes
+offset = 60
+for item in classAttributes:
+    d.text((20, offset), item, font=fnt, fill="black")
+    offset+=20
+offset+=10
+d.line((0,offset, 500, offset), fill="grey")
+offset+=10
+
+for item in classConstructors:
+    d.text((20, offset), item, font=fnt, fill="black")
+    if "\n" in item:
+        offset+=40
+    else: offset+=20
+
+for item in classMethods:
+
+    d.text((20, offset), item, font=fnt, fill="black")
+    if "\n" in item:
+        offset+=40
+    else: offset+=20
+
+
+
+#writes the repo's qrcode
+im.paste(qrcode.resize((75,75)), (420, 670))
+
+im.save("output.png")
+im.show()
