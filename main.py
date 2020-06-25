@@ -77,14 +77,18 @@ def strClean(str, mode):
             nStr+="# "
 
         nStr+=temp[1]+"( "
-        cont = 2
-        while not "throws" in temp[cont]:
+        cont = 2 
+        while not temp[cont]== "{" and not temp[cont]== "throws": 
             #cont > tipo dato
             #cont+1 > nome attributo
+            print(temp[cont])
+            
             temp[cont+1]=temp[cont+1].replace(",","")
             nStr+=temp[cont+1]+": "
             nStr+=temp[cont]+", "
-            cont+=2
+            cont+=2     
+            
+            
         nStr+=") "
         pass
     if mode == "methodName":
@@ -102,6 +106,7 @@ def strClean(str, mode):
         nStr+=temp[2]+"( "
         cont = 3
         while not temp[cont] == "{":
+            temp[cont+1]=temp[cont+1].replace(",","")
             nStr+=temp[cont+1]+": "
             nStr+=temp[cont]+", "
             cont+=2

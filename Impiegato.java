@@ -12,28 +12,25 @@ import java.time.*;
  * @author user
  */
 public class Impiegato {
-
     //start_attributes
-
     private String matricola;
     private String nominativo;
     private LocalDate annoAssunzione;
-    private byte livelloRetributivo;
+    private int livelloRetributivo;
     
     public static final int BASE_STIPENDIO = 800;
     public static final int ANZIANITA = 50;
     public static final int QUOTA_RETRIBUTIVA = 25;
     public static int contaMatricole = 0;
-
     //end_attributes
-
+    
     //start_constructors
-    public Impiegato(String nominativo, int annoAssunzione, byte livelloRetributivo) throws Exception{
+    public Impiegato(String nominativo, int annoAssunzione, int livelloRetributivo) throws Exception{
         if(annoAssunzione>LocalDate.now().getYear()) throw new Exception("Data sbagliata");
         else{
             this.matricola = "MAT"+contaMatricole;
             this.nominativo = nominativo;
-            this.annoAssunzione = LocalDate.of(1, Month.JANUARY, annoAssunzione);
+            this.annoAssunzione = LocalDate.of(annoAssunzione, Month.JANUARY, 1);
 
             if(livelloRetributivo<1) livelloRetributivo=1;
             else if (livelloRetributivo>6) livelloRetributivo=6;
@@ -43,7 +40,6 @@ public class Impiegato {
         }
         
     }
-
     //end_constructors
     
     
@@ -73,7 +69,7 @@ public class Impiegato {
         this.annoAssunzione = annoAssunzione;
     }
 
-    public byte getLivelloRetributivo() {
+    public int getLivelloRetributivo() {
         return livelloRetributivo;
     }
 
