@@ -109,10 +109,13 @@ class ImageCreator:
             nStr+=") "
             pass
         if modes == "methodName":
+            flaggella = False
             temp = str.replace("(", " ")
             temp = temp.replace(")", " ")
             temp = temp.split()
-            
+            if temp[1] == "static": 
+                temp.remove("static")
+                flaggella = True
             if temp[0]=="private":
                 nStr+="- "
             elif temp[0]=="public":
@@ -122,13 +125,13 @@ class ImageCreator:
 
             nStr+=temp[2]+"( "
             cont = 3
-            while not temp[cont] == "{":
+            while not temp[cont] == "{" and not temp[cont]== "throws":
                 temp[cont+1]=temp[cont+1].replace(",","")
                 nStr+=temp[cont+1]+": "
                 nStr+=temp[cont]+", "
                 cont+=2
             nStr+="): "+temp[1]
-
+            if flaggella == True: nStr+=" static"
         """if len(nStr) >= 50:
             nStr = nStr[:50] +"\n"+nStr[50:]
             """
