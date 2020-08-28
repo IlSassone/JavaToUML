@@ -5,7 +5,7 @@ import sys
 
 fnt = ImageFont.truetype("./fonts/SFPro.ttf", 18)
 title = ImageFont.truetype("./fonts/Heavy.ttf", 20)
-qrcode = Image.open("./github.png", "r")
+
 
 class ImageCreator:
     def __init__(self, fileName):
@@ -110,9 +110,13 @@ class ImageCreator:
             pass
         if modes == "methodName":
             flaggella = False
+            abstract = False
             temp = str.replace("(", " ")
             temp = temp.replace(")", " ")
             temp = temp.split()
+            if temp[1] == "abstract":
+                temp.remove("abstract")
+                abstract = True
             if temp[1] == "static": 
                 temp.remove("static")
                 flaggella = True
@@ -125,13 +129,14 @@ class ImageCreator:
 
             nStr+=temp[2]+"( "
             cont = 3
-            while not temp[cont] == "{" and not temp[cont]== "throws":
+            while not temp[cont] == "{" and not temp[cont]== "throws" and not temp[cont]==";":
                 temp[cont+1]=temp[cont+1].replace(",","")
                 nStr+=temp[cont+1]+": "
                 nStr+=temp[cont]+", "
                 cont+=2
             nStr+="): "+temp[1]
             if flaggella == True: nStr+=" static"
+            if abstract == True: nStr+=" abstract"
         """if len(nStr) >= 50:
             nStr = nStr[:50] +"\n"+nStr[50:]
             """
@@ -215,14 +220,14 @@ class ImageCreator:
         for item in self.classConstructors:
             self.d.text((20, offset), item, font=fnt, fill="black")
             if "\n" in item:
-                offset+=40
+                offset+=60
             else: offset+=20
 
         for item in self.classMethods:
 
             self.d.text((20, offset), item, font=fnt, fill="black")
             if "\n" in item:
-                offset+=40
+                offset+=60
             else: offset+=20
 
 
